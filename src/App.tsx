@@ -1,48 +1,36 @@
 import { useState } from 'react';
 import './App.css';
-import { Square } from './components/Square/Square';
+import { Board } from './components/Board/Board';
+import { Footer } from './components/Footer/Footer';
+import { Header } from './components/Header/Header';
+import { Turn } from './components/Turn/Turn';
+import { Winner } from './components/Winner/Winner';
+import { TURNS } from './constants/constants';
 
-const TURNS = {
-  X: 'X',
-  O: 'O'
-};
 export const App = () => {
-  const initialBoardState = Array(9).fill(null);
-  const [board, setBoard] = useState<(string | null)[]>(initialBoardState);
   const [turn, setTurn] = useState<string>(TURNS.X);
+  const [winner, setWinner] = useState<string | null>(null);
 
-  const updateBoard = (index: number) => {
-    if (board[index]) return;
-
-    const auxBoard = [...board];
-    auxBoard[index] = turn;
-    setBoard(auxBoard);
-
-    const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X;
-    setTurn(newTurn);
+  const updateWinner = (newWinner: string | null) => {
+    setWinner(newWinner);
   };
 
-  const clearBoard = () => {
-    setBoard(initialBoardState);
-    setTurn(TURNS.X);
+  const updateTurn = (newTurn: string) => {
+    setTurn(newTurn);
   };
 
   return (
     <main className='board'>
-      <h1>Tic Tac Toe</h1>
-      <section className='game'>
-        {board.map((_, index) => (
-          <Square key={`square-${index}`} updateBoard={updateBoard} index={index}>
-            {board[index]}
-          </Square>
-        ))}
-      </section>
-      <section>
-        <span>Turn: {turn}</span>
-      </section>
-      <footer>
-        <button onClick={clearBoard}>Limpiar tablero</button>
-      </footer>
+      <Header />
+      <Board
+        winner={winner}
+        updateWinner={updateWinner}
+        turn={turn}
+        updateTurn={updateTurn}
+      />
+      <Turn turn={turn} winner={winner} />
+      <Winner winner={winner} />
+      <Footer />
     </main>
   );
 };
