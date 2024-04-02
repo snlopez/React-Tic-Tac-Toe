@@ -22,11 +22,20 @@ export const Board = ({
   clearResetFlag
 }: BoardProps) => {
   const initialBoardState = Array(9).fill(null);
+  console.log(initialBoardState);
 
   const [board, setBoard] = useState<(string | null)[]>(initialBoardState);
 
   useEffect(() => {
-    resetFlag && setBoard(initialBoardState);
+    const storageState: string | null = localStorage.getItem('board');
+    storageState && setBoard(JSON.parse(storageState).data);
+  }, []);
+
+  useEffect(() => {
+    if (resetFlag) {
+      localStorage.removeItem('board');
+      setBoard(initialBoardState);
+    }
   }, [resetFlag]);
 
   useEffect(() => {
@@ -35,10 +44,14 @@ export const Board = ({
 
   const updateBoard = (index: number) => {
     if (board[index] || winner) return;
-
     const newBoard = [...board];
     newBoard[index] = turn;
     setBoard(newBoard);
+
+    const storagedata = {
+      data: newBoard
+    };
+    localStorage.setItem('board', JSON.stringify(storagedata));
 
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X;
     updateTurn(newTurn);

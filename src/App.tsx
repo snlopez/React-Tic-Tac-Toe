@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import './App.css';
 import { Board } from './components/Board/Board';
 import { Footer } from './components/Footer/Footer';
 import { Header } from './components/Header/Header';
@@ -7,6 +6,7 @@ import { Turn } from './components/Turn/Turn';
 import { Winner } from './components/Winner/Winner';
 import { TURNS } from './constants/constants';
 import confetti from 'canvas-confetti';
+import './App.css';
 
 export const App = () => {
   const [turn, setTurn] = useState<string>(TURNS.X);
