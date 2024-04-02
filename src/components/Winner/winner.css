@@ -1,0 +1,27 @@
+.winner {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  left: 0;
+  top: 0;
+  display: grid;
+  place-items: center;
+}
+
+.winner-text {
+  width: 150px;
+  height: 100px;
+  background-color: #111;
+  align-items: center;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: small;
+}
+
+.winner-text button {
+  width: 80%;
+  background-color: #fff;
+}

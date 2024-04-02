@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { useState } from 'react';
-import { TURNS, WINNER_COMBOS } from '../../constants/constants';
+import { TURNS } from '../../constants/constants';
+import { checkTie, verifyWinner } from '../../utils';
 import { Square } from '../Square/Square';
 
 interface BoardProps {
@@ -7,39 +9,48 @@ interface BoardProps {
   updateWinner: (winner: string | null) => void;
   turn: string;
   updateTurn: (turn: string) => void;
+  updateTie: (tie: boolean) => void;
+  resetFlag: boolean;
+  clearResetFlag: (resetFlag: boolean) => void;
 }
-export const Board = ({ winner, updateWinner, turn, updateTurn }: BoardProps) => {
+export const Board = ({
+  winner,
+  updateWinner,
+  turn,
+  updateTurn,
+  updateTie,
+  resetFlag,
+  clearResetFlag
+}: BoardProps) => {
   const initialBoardState = Array(9).fill(null);
 
   const [board, setBoard] = useState<(string | null)[]>(initialBoardState);
+
+  useEffect(() => {
+    resetFlag && setBoard(initialBoardState);
+  }, [resetFlag]);
+
+  useEffect(() => {
+    resetFlag && clearResetFlag(false);
+  }, [board]);
+
   const updateBoard = (index: number) => {
     if (board[index] || winner) return;
 
-    const auxBoard = [...board];
-    auxBoard[index] = turn;
-    setBoard(auxBoard);
+    const newBoard = [...board];
+    newBoard[index] = turn;
+    setBoard(newBoard);
 
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X;
     updateTurn(newTurn);
-    verifyWinner(auxBoard);
+    const newWinner = verifyWinner(newBoard);
+    updateWinner(newWinner);
+    if (!winner) {
+      const isTie = checkTie(newBoard);
+      updateTie(isTie);
+    }
   };
 
-  const clearBoard = () => {
-    setBoard(initialBoardState);
-    updateTurn(TURNS.X);
-    updateWinner(null);
-  };
-
-  const verifyWinner = (newBoard: (string | null)[]) => {
-    WINNER_COMBOS.every(combo => {
-      const comboValue = newBoard[combo[0]];
-      if (comboValue && combo.every(index => newBoard[index] === comboValue)) {
-        updateWinner(comboValue);
-        return false;
-      }
-      return true;
-    });
-  };
   return (
     <section className='game'>
       {board.map((_, index) => (
