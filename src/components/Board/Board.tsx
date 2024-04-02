@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TURNS } from '../../constants/constants';
 import { checkTie, verifyWinner } from '../../utils';
 import { Square } from '../Square/Square';

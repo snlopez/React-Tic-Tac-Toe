@@ -3,7 +3,13 @@ module.exports = {
     browser: true,
     es2021: true
   },
-  extends: ['standard-with-typescript', 'plugin:react/recommended'],
+  extends: [
+    'eslint:recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:jsx-a11y/recommended',
+    'plugin:prettier/recommended',
+    'plugin:@typescript-eslint/recommended'
+  ],
   overrides: [
     {
       env: {
@@ -20,6 +26,13 @@ module.exports = {
     sourceType: 'module',
     project: './tsconfig.json'
   },
-  plugins: ['react'],
-  rules: {}
+  rules: {
+    'react/prop-types': 'off',
+    'prettier/prettier': 'error',
+    '@typescript-eslint/no-unused-vars': 'error',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-explicit-any': 'off'
+  },
+  parser: '@typescript-eslint/parser',
+  plugins: ['prettier', '@typescript-eslint']
 };

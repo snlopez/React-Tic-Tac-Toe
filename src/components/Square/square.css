@@ -7,3 +7,7 @@
   font-weight: 500;
   font-size: 50px;
 }
+
+.square:hover {
+  cursor: pointer;
+}
