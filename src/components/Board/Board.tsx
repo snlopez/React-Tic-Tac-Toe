@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { TURNS } from '../../constants/constants';
+import { StoredData } from '../../interfaces';
 import { checkTie, verifyWinner } from '../../utils';
 import { Square } from '../Square/Square';
 
@@ -21,15 +22,15 @@ export const Board = ({
   resetFlag,
   clearResetFlag
 }: BoardProps) => {
+  const storageState: string | null = localStorage.getItem('appStoredData');
   const initialBoardState = Array(9).fill(null);
-  console.log(initialBoardState);
+  const storageData: StoredData | null = storageState
+    ? JSON.parse(storageState)
+    : null;
 
-  const [board, setBoard] = useState<(string | null)[]>(initialBoardState);
-
-  useEffect(() => {
-    const storageState: string | null = localStorage.getItem('board');
-    storageState && setBoard(JSON.parse(storageState).data);
-  }, []);
+  const [board, setBoard] = useState<(string | null)[]>(
+    storageData ? storageData.board : initialBoardState
+  );
 
   useEffect(() => {
     if (resetFlag) {
@@ -48,19 +49,23 @@ export const Board = ({
     newBoard[index] = turn;
     setBoard(newBoard);
 
-    const storagedata = {
-      data: newBoard
-    };
-    localStorage.setItem('board', JSON.stringify(storagedata));
-
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X;
     updateTurn(newTurn);
     const newWinner = verifyWinner(newBoard);
     updateWinner(newWinner);
+
+    let isTie = false;
     if (!winner) {
-      const isTie = checkTie(newBoard);
+      isTie = checkTie(newBoard);
       updateTie(isTie);
     }
+    const updatedData: StoredData = {
+      tie: isTie,
+      turn: newTurn,
+      winner: newWinner,
+      board: newBoard
+    };
+    localStorage.setItem('appStoredData', JSON.stringify(updatedData));
   };
 
   return (

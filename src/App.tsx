@@ -7,11 +7,16 @@ import { Winner } from './components/Winner/Winner';
 import { TURNS } from './constants/constants';
 import confetti from 'canvas-confetti';
 import './App.css';
+import { StoredData } from './interfaces';
 
 export const App = () => {
-  const [turn, setTurn] = useState<string>(TURNS.X);
-  const [winner, setWinner] = useState<string | null>(null);
-  const [isTie, setIsTie] = useState<boolean>(false);
+  const appStoredData = localStorage.getItem('appStoredData');
+  const initialData: StoredData | null = appStoredData
+    ? JSON.parse(appStoredData)
+    : null;
+  const [turn, setTurn] = useState<string>(initialData?.turn ?? TURNS.X);
+  const [winner, setWinner] = useState<string | null>(initialData?.winner ?? null);
+  const [isTie, setIsTie] = useState<boolean>(initialData?.tie ?? false);
   const [resetGame, setResetGame] = useState<boolean>(false);
 
   const updateWinner = (newWinner: string | null) => {
